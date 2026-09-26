@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "zalmox": {
+      "command": "npx",
+      "args": ["-y", "zalmox", "mcp"]
+    }
+  }
+}

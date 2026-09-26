@@ -1,0 +1,9 @@
+{
+  "name": "zalmox",
+  "version": "0.1.0",
+  "description": "Game-ready 3D models, VFX flipbooks, PBR textures, skyboxes and terrains from Zalmox (zalmox.io), with Unity packages: MCP server and agent skill.",
+  "author": { "name": "Zalmox", "url": "https://zalmox.io" },
+  "homepage": "https://zalmox.io/docs/agents",
+  "license": "MIT",
+  "keywords": ["3d", "vfx", "game-assets", "unity", "textures"]
+}

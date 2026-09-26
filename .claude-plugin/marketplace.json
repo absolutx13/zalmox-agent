@@ -1,0 +1,17 @@
+{
+  "name": "zalmox",
+  "owner": {
+    "name": "Zalmox",
+    "url": "https://zalmox.io"
+  },
+  "metadata": {
+    "description": "Zalmox for AI agents: generate game-ready 3D models, VFX, textures and skyboxes from your coding agent."
+  },
+  "plugins": [
+    {
+      "name": "zalmox",
+      "source": "./plugins/zalmox",
+      "description": "Game-ready 3D models, VFX flipbooks, PBR textures, skyboxes and terrains from Zalmox, with Unity packages."
+    }
+  ]
+}
