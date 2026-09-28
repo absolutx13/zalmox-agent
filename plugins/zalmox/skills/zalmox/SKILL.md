@@ -12,7 +12,7 @@ run `npx zalmox login` once.
 ## Rules
 
 1. **Money first.** Cloud jobs spend the user's credits; `my-gpu` jobs are free but need their paired machine to be
-   on. Before a cloud job, get the price (`estimate_cost`, or `zalmox types <type>`) and tell the user; for anything
+   on (to set one up, follow https://zalmox.io/runner/SETUP.md with the user, or send them to https://zalmox.io/my-gpu). Before a cloud job, get the price (`estimate_cost`, or `zalmox types <type>`) and tell the user; for anything
    over about 50 credits, or several jobs, ask before starting. Pass `max_credits` / `--max-credits` as a guard.
 2. **Draft first.** Start on the draft tier; offer final (more candidates, judged, costs more) once the user likes
    the direction.
@@ -38,4 +38,13 @@ run `npx zalmox login` once.
   No scenes or several objects.
 - Images for `image-to-3d`: the whole object, plain background, three-quarter view.
 - VFX: the effect's colours and character ("violet arcane burst with gold sparks"), and choose `effect` (explosion,
-  fire, smoke, magic, electric, thruster). Loops (`loop: on`) suit fire, smoke and thrusters.
+  fire, smoke, vortex, magic, electric, lightning, thruster). `vortex` is a tornado, dust devil or whirlpool spinning in
+  place; `electric` an arc between two points; `lightning` a strike from the sky that flashes and fades. Loops
+  (`loop: on`) suit fire, smoke, vortices, electric arcs and thrusters. `colour: neutral` gives a white/grey effect
+  to tint in the game. Results vary a lot by seed: `variations: 2` or `4` (priced per variation) makes several at
+  once with a contact sheet (`contact_sheet` output) to pick from.
+- `vfx-smoke`: try `preview: on` first (6×6 frames, 128 px, a coarse simulation, a fraction of the time and credits,
+  draft only), then run the chosen seed full size. `color` only tints the material: for several colours make one
+  smoke and recolour it in Unity; for different smoke change the seed.
+- Every job type that makes files takes a `name` (e.g. "storm wall" → `storm_wall_1a2b3c`): set one when making
+  several assets of one kind, so their files and prefabs can be told apart.
