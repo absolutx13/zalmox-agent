@@ -21,7 +21,9 @@ run `npx zalmox login` once.
    - A new look for an existing model: `retexture` (its `sourceModel` is the model asset's id).
    - Motion for a model: `animate`.
    - Explosions, fire, smoke, magic, electricity, thrusters as a flipbook: `vfx-flipbook`, or `vfx-layered` for a
-     full explosion or fire with lit smoke, sparks and a light. Pure smoke simulations: `vfx-smoke`.
+     full explosion, fire or impact with lit smoke, sparks and a light (`duration` sets how long a one-shot plays;
+     an impact defaults to 0.5 s). Pure smoke simulations: `vfx-smoke`. VFX jobs also save their JSON sidecar
+     (layers, grid, fps) loose as a `sidecar` output, so there's no need to unpack the Unity package to read it.
    - A tiling material: `pbr-texture`. Sky: `skybox`. Landscape: `terrain`. Concept art or icons: `image`.
 4. **Wait and save.** Jobs take one to ten minutes. `wait_for_job` with a `download_dir` inside the user's project
    (e.g. `Assets/Zalmox/` in a Unity project) saves the files; if it says the job is still running, call it again.
