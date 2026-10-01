@@ -31,7 +31,9 @@ run `npx zalmox login` once.
    for a GPU to boot (about 7 minutes when none is running): tell the user and keep waiting; it isn't stuck.
 5. **Report what you saved**: the files and what each is for. The `.unitypackage` imports into Unity (Assets →
    Import Package) and builds a ready prefab. `.glb` / `.fbx` are the model, and flipbook PNGs are sprite sheets
-   (columns × rows are in the job's outputs).
+   (columns × rows are in the job's outputs). A model whose picture showed lights (a glowing eye, a light strip) also
+   comes with `<name>_emissive.png`, already the emission map of the GLB and of the Unity material: use it for glow
+   rather than deriving one from the albedo (`emissive: off` skips it; no file means no lights were found).
 6. **Don't retry blindly.** A failed job returns its credits. Read the error, change what it points at (prompt,
    image, option), and tell the user before trying again.
 
@@ -45,6 +47,11 @@ run `npx zalmox login` once.
   (`<name>_normal.png`, in the Unity package too), so plating and small detail survive the cut; it adds about half a
   minute. The model output's metadata records it as `normalBake` (`reason`, `from`: the detailed mesh's triangles). If
   the bake couldn't be made, its `checks` has a `normalMap` entry saying why: tell the user, as the detail is missing.
+- Two-sided objects (drones, vehicles, crates, furniture) can come out with uneven sides: rotors at different
+  heights, one arm fused into the hull. `symmetry: auto` (with `straighten: on`) mirrors the better half onto the
+  other when the object is clearly symmetric, and leaves it alone otherwise; the model output's metadata has
+  `symmetry` (score 0–1, `applied`, `kept`, or the `reason` it wasn't mirrored). `symmetry: x` forces a mirror
+  across the left-right (X) plane. Leave it off for characters holding something, plants and rocks.
 - VFX: the effect's colours and character ("violet arcane burst with gold sparks"), and choose `effect` (explosion,
   fire, smoke, vortex, magic, electric, lightning, thruster). `vortex` is a tornado, dust devil or whirlpool spinning in
   place; `electric` an arc between two points; `lightning` a strike from the sky that flashes and fades. Loops
