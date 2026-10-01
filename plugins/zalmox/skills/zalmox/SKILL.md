@@ -73,25 +73,48 @@ job's GLB), `motions` a JSON list. `zalmox types animate` (or `list_job_types`, 
   are from the GLB before writing any.
 - Whole-model presets, each once: `{"type":"bob"}`, `spin`, `hover`, `pulse`, `sway`, `recoil`. How far they move
   scales with the model.
-- Up to 4 moving parts. A part is the faces whose centre lies in any of its `spheres` (`[x, y, z, radius]`):
+- Up to 8 moving parts. A painted part is the faces whose centre lies in any of its `spheres` (`[x, y, z, radius]`):
   - `{"type":"wheel","name","spheres","pivot":[x,y,z],"axis":[x,y,z],"speed":1}` spins; speed is turns a second
     (0.25-4).
   - `{"type":"hinge","name","spheres","pivot","axis","angle":100}` opens by angle degrees (5-180), then closes.
   - `{"type":"slide","name","spheres","direction":[x,y,z],"distance":0.2}` moves out, in metres, then back.
   - Optional `"cut":[px,py,pz,nx,ny,nz]` and `"bounds":[min xyz, max xyz]` split the mesh cleanly along a plane.
+- A propeller, fan or rotor disc needs no spheres: `{"type":"rotor","name","hub":[x,y,z]}` finds it from one point on
+  its hub (its top or centre), cuts it free of its arm, caps the cut, puts the pivot on its centre and spins it
+  (`speed`, 0.25-8 turns a second, default 3). Optional: `"axis"` (default up, turned to a tilted rotor's own plane;
+  give `[0,-1,0]` for one hanging under its arm), `"radius"` and `"depth"` (metres: how far out, and how far under
+  the hub along the axis, the rotor reaches).
+  - Hub only works on clean rotors: a disc or duct, a rotor on a shaft above its arm, blades on a round motor.
+  - Generated props are often irregular or fused to a neighbour's blades. Then the job fails asking for the radius, or
+    the radius it reports is clearly not the rotor's: give `radius` and `depth`, read off the GLB. With both, the
+    rotor is everything inside that cylinder, which always works.
+  - A wheel can take `"hub"` (with its `"axis"`) instead of spheres and pivot, and is found the same way.
 - Each motion is one clip, one after another on one timeline, with an Animator state in the Unity prefab: `Hover`
-  and the other presets; `<Name>Spin` for a wheel, `<Name>Open`/`<Name>Close` for a hinge or slide ("front fan"
-  becomes `FrontFanSpin`).
+  and the other presets; `<Name>Spin` for a wheel or rotor, `<Name>Open`/`<Name>Close` for a hinge or slide. The
+  name's words are run together, each starting with a capital, its own capitals kept ("front fan" becomes
+  `FrontFanSpin`, "RotorFL" `RotorFLSpin`); parts need different names.
+- To play clips together (hover while the rotors spin), layer them in the game. The clips share one take, so every
+  animated node has keys in every clip, at rest where the clip doesn't move it: keep in each clip only the curves of
+  the nodes it moves, listed as `nodes` in the report's `clips` (`<model>_Motion` for a preset, `<model>_<Name>_Pivot`
+  for a part); pick curves by node, not by how little they move. A preset's clip also has keys on the collider hull
+  `UCX_<model>_00`, the opposite of the model's, so the collider holds still while the model hovers: drop them to have
+  it follow. The prefab's own controller plays one whole-model clip and one part clip at a time.
 - A bad list is refused before any credits are spent, with the reason (e.g. `fan: the pivot is missing`).
+- The model is cleaned and placed again (bottom centre on the origin, scaled to its height), so the points you gave
+  move. The job's `<name>_motions.json` output (a `sidecar`, also in the model output's metadata) says how:
+  `placement` (`scale`, `offset`: placed = scale x source + offset) and, per part, `pivot` and `axis` in the placed
+  model, `sourcePivot` as given, and for a rotor `selection` (island, above the arm, above the motor, cylinder),
+  `radius`, `cuts` and `centred`. Read it after every animate job and tell the user if a rotor's radius looks wrong.
 
-A drone about 0.5 m across, hovering, with four fans spinning 3 turns a second:
+A quadcopter about 0.5 m across, hovering, its four rotors spinning; the back two are fused to their arms, so they
+get a radius and a depth:
 
 ```json
 [{"type":"hover"},
- {"type":"wheel","name":"fan front left","spheres":[[-0.2,0.12,0.2,0.09]],"pivot":[-0.2,0.12,0.2],"axis":[0,1,0],"speed":3},
- {"type":"wheel","name":"fan front right","spheres":[[0.2,0.12,0.2,0.09]],"pivot":[0.2,0.12,0.2],"axis":[0,1,0],"speed":3},
- {"type":"wheel","name":"fan back left","spheres":[[-0.2,0.12,-0.2,0.09]],"pivot":[-0.2,0.12,-0.2],"axis":[0,1,0],"speed":3},
- {"type":"wheel","name":"fan back right","spheres":[[0.2,0.12,-0.2,0.09]],"pivot":[0.2,0.12,-0.2],"axis":[0,1,0],"speed":3}]
+ {"type":"rotor","name":"rotor front left","hub":[-0.2,0.12,0.2]},
+ {"type":"rotor","name":"rotor front right","hub":[0.2,0.12,0.2]},
+ {"type":"rotor","name":"rotor back left","hub":[-0.2,0.12,-0.2],"radius":0.09,"depth":0.02},
+ {"type":"rotor","name":"rotor back right","hub":[0.2,0.12,-0.2],"radius":0.09,"depth":0.02}]
 ```
 
 CLI: `zalmox create animate --sourceModel <asset id> --motions "$(cat drone-motions.json)" --wait --out ./assets`.
