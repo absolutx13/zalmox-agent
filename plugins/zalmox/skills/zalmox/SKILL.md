@@ -19,7 +19,7 @@ run `npx zalmox login` once.
 3. **Pick the right job type** (`list_job_types` / `zalmox types` has every option):
    - A 3D model from a description: `text-to-3d`. From a picture: `image-to-3d` (`image_path` / `--image`).
    - A new look for an existing model: `retexture` (its `sourceModel` is the model asset's id).
-   - Motion for a model: `animate`.
+   - Motion for a model: `animate` (see "Animating a model" below for its `motions` list).
    - Explosions, fire, smoke, magic, electricity, thrusters as a flipbook: `vfx-flipbook`, or `vfx-layered` for a
      full explosion, fire or impact with lit smoke, sparks and a light (`duration` sets how long a one-shot plays;
      an impact defaults to 0.5 s). Pure smoke simulations: `vfx-smoke`. VFX jobs also save their JSON sidecar
@@ -27,7 +27,8 @@ run `npx zalmox login` once.
    - A tiling material: `pbr-texture`. Sky: `skybox`. Landscape: `terrain`. Concept art or icons: `image`.
 4. **Wait and save.** Jobs take one to ten minutes. `wait_for_job` with a `download_dir` inside the user's project
    (e.g. `Assets/Zalmox/` in a Unity project) saves the files; if it says the job is still running, call it again.
-   CLI: `--wait --out <dir>`.
+   CLI: `--wait --out <dir>`. A queued cloud job whose stage reads "Starting a cloud GPU (about N min)" is waiting
+   for a GPU to boot (about 7 minutes when none is running): tell the user and keep waiting; it isn't stuck.
 5. **Report what you saved**: the files and what each is for. The `.unitypackage` imports into Unity (Assets →
    Import Package) and builds a ready prefab. `.glb` / `.fbx` are the model, and flipbook PNGs are sprite sheets
    (columns × rows are in the job's outputs).
@@ -39,6 +40,11 @@ run `npx zalmox login` once.
 - 3D: one object, what it is, its material and style ("a weathered wooden treasure chest with iron bands, stylized").
   No scenes or several objects.
 - Images for `image-to-3d`: the whole object, plain background, three-quarter view.
+- Triangle budgets for 3D: `targetFaceCount` (e.g. 25000) or `lowPoly`. When the budget is 150,000 or fewer (a tenth
+  or less of the generated surface), or `lowPoly` is set, Zalmox also bakes a normal map from the detailed surface
+  (`<name>_normal.png`, in the Unity package too), so plating and small detail survive the cut; it adds about half a
+  minute. The model output's metadata records it as `normalBake` (`reason`, `from`: the detailed mesh's triangles). If
+  the bake couldn't be made, its `checks` has a `normalMap` entry saying why: tell the user, as the detail is missing.
 - VFX: the effect's colours and character ("violet arcane burst with gold sparks"), and choose `effect` (explosion,
   fire, smoke, vortex, magic, electric, lightning, thruster). `vortex` is a tornado, dust devil or whirlpool spinning in
   place; `electric` an arc between two points; `lightning` a strike from the sky that flashes and fades. Loops
@@ -50,3 +56,35 @@ run `npx zalmox login` once.
   smoke and recolour it in Unity; for different smoke change the seed.
 - Every job type that makes files takes a `name` (e.g. "storm wall" → `storm_wall_1a2b3c`): set one when making
   several assets of one kind, so their files and prefabs can be told apart.
+
+## Animating a model
+
+`animate` (2 credits, CPU) bakes motion into one of the user's models: `sourceModel` is the model asset's id (a 3D
+job's GLB), `motions` a JSON list. `zalmox types animate` (or `list_job_types`, its `guide`) has the full format.
+
+- Points are in the source GLB's own coordinates: glTF, Y up, metres. Read the model's size and where its parts
+  are from the GLB before writing any.
+- Whole-model presets, each once: `{"type":"bob"}`, `spin`, `hover`, `pulse`, `sway`, `recoil`. How far they move
+  scales with the model.
+- Up to 4 moving parts. A part is the faces whose centre lies in any of its `spheres` (`[x, y, z, radius]`):
+  - `{"type":"wheel","name","spheres","pivot":[x,y,z],"axis":[x,y,z],"speed":1}` spins; speed is turns a second
+    (0.25-4).
+  - `{"type":"hinge","name","spheres","pivot","axis","angle":100}` opens by angle degrees (5-180), then closes.
+  - `{"type":"slide","name","spheres","direction":[x,y,z],"distance":0.2}` moves out, in metres, then back.
+  - Optional `"cut":[px,py,pz,nx,ny,nz]` and `"bounds":[min xyz, max xyz]` split the mesh cleanly along a plane.
+- Each motion is one clip, one after another on one timeline, with an Animator state in the Unity prefab: `Hover`
+  and the other presets; `<Name>Spin` for a wheel, `<Name>Open`/`<Name>Close` for a hinge or slide ("front fan"
+  becomes `FrontFanSpin`).
+- A bad list is refused before any credits are spent, with the reason (e.g. `fan: the pivot is missing`).
+
+A drone about 0.5 m across, hovering, with four fans spinning 3 turns a second:
+
+```json
+[{"type":"hover"},
+ {"type":"wheel","name":"fan front left","spheres":[[-0.2,0.12,0.2,0.09]],"pivot":[-0.2,0.12,0.2],"axis":[0,1,0],"speed":3},
+ {"type":"wheel","name":"fan front right","spheres":[[0.2,0.12,0.2,0.09]],"pivot":[0.2,0.12,0.2],"axis":[0,1,0],"speed":3},
+ {"type":"wheel","name":"fan back left","spheres":[[-0.2,0.12,-0.2,0.09]],"pivot":[-0.2,0.12,-0.2],"axis":[0,1,0],"speed":3},
+ {"type":"wheel","name":"fan back right","spheres":[[0.2,0.12,-0.2,0.09]],"pivot":[0.2,0.12,-0.2],"axis":[0,1,0],"speed":3}]
+```
+
+CLI: `zalmox create animate --sourceModel <asset id> --motions "$(cat drone-motions.json)" --wait --out ./assets`.
