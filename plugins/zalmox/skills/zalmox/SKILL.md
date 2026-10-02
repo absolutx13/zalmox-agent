@@ -80,7 +80,14 @@ run `npx zalmox login` once.
   degrees; `normalTilt` in the metadata): medium suits most surfaces, also rock under a strong light. A rock face or
   other deep relief often comes out lit, with shadow bands in the albedo (`brightness.dark` under about 0.85 in the
   metadata): `delight: on` evens them out and keeps the relief in the normal map; leave it off for surfaces with
-  dark and light parts of their own.
+  dark and light parts of their own. Shine is not read from the description: when it says glossy, wet, glassy, icy
+  or polished, set `roughness` (`matte`, `satin`, `glossy`, `wet`: a mean smoothness of 10, 28, 45, 60 percent) or
+  `smoothness` (0 to 100, the mean itself; it overrides the level). Left on `auto` the map follows `material`, and
+  ground or stone come out nearly fully rough whatever the picture shows. The picture places the shine round that
+  mean: dark parts shine, pale and grainy parts stay dull. For a ground seen at a low angle (a game's terrain) keep
+  it low, since the whole plain mirrors the sky: a dark ground loses its colour above about 12 to 18, a bright one
+  takes 28 to 45, so `satin` is the shiny level there and `glossy` or `wet` are for bright surfaces or ones seen
+  from above. The metadata's `roughness` entry (`level`, `smoothness`, `mean`, `smooth`, `rough`) says what came out.
 - VFX: the effect's colours and character ("violet arcane burst with gold sparks"), and choose `effect` (explosion,
   fire, smoke, vortex, magic, electric, lightning, thruster). `vortex` is a tornado, dust devil or whirlpool spinning in
   place; `electric` an arc between two points; `lightning` a strike from the sky that flashes and fades. Loops
