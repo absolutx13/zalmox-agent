@@ -33,7 +33,9 @@ run `npx zalmox login` once.
    Import Package) and builds a ready prefab. `.glb` / `.fbx` are the model, and flipbook PNGs are sprite sheets
    (columns × rows are in the job's outputs). A model whose picture showed lights (a glowing eye, a light strip) also
    comes with `<name>_emissive.png`, already the emission map of the GLB and of the Unity material: use it for glow
-   rather than deriving one from the albedo (`emissive: off` skips it; no file means no lights were found).
+   rather than deriving one from the albedo (`emissive: off` skips it; no file means no lights were found, or that
+   the picture's view couldn't be told from its opposite: the model output's `emissive.reason` says which).
+   Animating the model keeps the map (`emissive.carried` in the animated model's metadata).
 6. **Don't retry blindly.** A failed job returns its credits. Read the error, change what it points at (prompt,
    image, option), and tell the user before trying again.
 
@@ -87,7 +89,8 @@ run `npx zalmox login` once.
   mean: dark parts shine, pale and grainy parts stay dull. For a ground seen at a low angle (a game's terrain) keep
   it low, since the whole plain mirrors the sky: a dark ground loses its colour above about 12 to 18, a bright one
   takes 28 to 45, so `satin` is the shiny level there and `glossy` or `wet` are for bright surfaces or ones seen
-  from above. The metadata's `roughness` entry (`level`, `smoothness`, `mean`, `smooth`, `rough`) says what came out.
+  from above. The metadata's `roughness` entry (`level`, which is `custom` when a figure was given; `smoothness`, `mean`, `smooth`,
+  `rough`) says what came out.
 - VFX: the effect's colours and character ("violet arcane burst with gold sparks"), and choose `effect` (explosion,
   fire, smoke, vortex, magic, electric, lightning, thruster). `vortex` is a tornado, dust devil or whirlpool spinning in
   place; `electric` an arc between two points; `lightning` a strike from the sky that flashes and fades. Loops
@@ -100,15 +103,19 @@ run `npx zalmox login` once.
 - Sound effects (`sfx`): say only what should be heard. The model has no negative prompt and naming a sound tends
   to produce it, so "no explosion, no music" parts are left out of what it is given (the clip's metadata lists them
   as `unsaid`). A one-shot is cut to its sound and is never longer than `length`; a loop (`loop: on`) is the steady
-  part of the take, evened out, so it can be a little shorter than `length`: read `seconds`. Pick takes from each
+  part of the take, so it can be a little shorter than `length`: read `seconds`. A loop keeps its own rise and fall
+  (gusts, chimes, cracks); pass `evenness: bed` for a hum, a drone or an engine, which should sit at one level
+  (`sound.swingDb` says how far a loop's level moves: a bed a few dB, an ambience ten or more). Pick takes from each
   `.ogg` output's metadata without listening: `sound` has `lufs`, `peakDb`, `rmsDb`, `soundSeconds`, the `rumble`
   share that was removed (under 28 Hz) and the `bass` / `mid` / `high` shares of its energy (split at 150 Hz and
   8 kHz); `checks` lists what is wrong with a take (`bass`: nearly all under 150 Hz, silent on small speakers;
   `silence`; `rumble`; `quiet`). A flagged take was already made a second time and the better one kept (`rerolled`),
   so a take that is still flagged needs different words: prompts naming something low ("deep rumble", "low hum")
-  often give bass only; add what is heard above it ("with a hissing, crackling top"). A loop is a bed at one level:
-  make loud events (thunder, a blast) as one-shots and play them over it. The one-shots of one job come at one
-  loudness (louder takes are lowered: `gainDb`), so any of them can be played at random. `sound.onsets` lists the
+  often give bass only; add what is heard above it ("with a hissing, crackling top"). The one-shots of one job come
+  at one loudness and none is louder than -16 LUFS (louder takes are lowered: `gainDb`), so any of them can be
+  played at random and a sustained tone sits with the hits beside it. The words set the sound's shape as well as its
+  kind: the model places events on a fixed grid, so "a hard crack and a short tail" at `length` 1 comes as two
+  separate sounds in every take, and a longer `length` changes the character, not only the padding. `sound.onsets` lists the
   seconds at which a second sound starts inside a one-shot (absent: none). A subject that implies an ending draws
   it whatever the words say ("a shell falling" ends in an impact): pick a take without onsets, cut before the first
   one, or describe only the sound itself ("a long whistling whine falling in pitch").
