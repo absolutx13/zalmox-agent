@@ -61,6 +61,17 @@ run `npx zalmox login` once.
 - `vfx-smoke`: try `preview: on` first (6×6 frames, 128 px, a coarse simulation, a fraction of the time and credits,
   draft only), then run the chosen seed full size. `color` only tints the material: for several colours make one
   smoke and recolour it in Unity; for different smoke change the seed.
+- Sound effects (`sfx`): say only what should be heard. The model has no negative prompt and naming a sound tends
+  to produce it, so "no explosion, no music" parts are left out of what it is given (the clip's metadata lists them
+  as `unsaid`). A one-shot is cut to its sound and is never longer than `length`; a loop (`loop: on`) is the steady
+  part of the take, evened out, so it can be a little shorter than `length`: read `seconds`. Pick takes from each
+  `.ogg` output's metadata without listening: `sound` has `lufs`, `peakDb`, `rmsDb`, `soundSeconds`, the `rumble`
+  share that was removed (under 28 Hz) and the `bass` / `mid` / `high` shares of its energy (split at 150 Hz and
+  8 kHz); `checks` lists what is wrong with a take (`bass`: nearly all under 150 Hz, silent on small speakers;
+  `silence`; `rumble`; `quiet`). A flagged take was already made a second time and the better one kept (`rerolled`),
+  so a take that is still flagged needs different words: prompts naming something low ("deep rumble", "low hum")
+  often give bass only; add what is heard above it ("with a hissing, crackling top"). A loop is a bed at one level:
+  make loud events (thunder, a blast) as one-shots and play them over it.
 - Every job type that makes files takes a `name` (e.g. "storm wall" → `storm_wall_1a2b3c`): set one when making
   several assets of one kind, so their files and prefabs can be told apart.
 
