@@ -65,7 +65,9 @@ run `npx zalmox login` once.
   to paint it. `material` sets the kind of surface only; colours come from the description. `size` is 1024 (default),
   2048 or 4096 pixels per side (8 and 12 credits instead of 5). To turn the user's own picture into a material, pass
   it as the image (`image_path` / `--image`) with a prompt that says what it shows: its centre square is made to
-  tile, and the normal, height, roughness and AO maps are derived from it. The albedo output's metadata has
+  tile, and the normal, height, roughness and AO maps are derived from it. Pictures whose opposite edges look alike
+  (the same kind of surface left and right, top and bottom) join best; where they differ, the repainted seam shows
+  as a strip of its own through the middle of the tile. The albedo output's metadata has
   `symmetry` (`flagged`: the layout is mirrored and reads as a kaleidoscope when tiled, even after its one re-roll)
   and `seam` (`flagged`: a seam still shows through the middle of the tile). If either is flagged, tell the user and
   try another seed. `reliefStrength` sets how steep the normal map is (its steepest tenth tilts about 30, 45 or 60
@@ -92,7 +94,11 @@ run `npx zalmox login` once.
   `silence`; `rumble`; `quiet`). A flagged take was already made a second time and the better one kept (`rerolled`),
   so a take that is still flagged needs different words: prompts naming something low ("deep rumble", "low hum")
   often give bass only; add what is heard above it ("with a hissing, crackling top"). A loop is a bed at one level:
-  make loud events (thunder, a blast) as one-shots and play them over it.
+  make loud events (thunder, a blast) as one-shots and play them over it. The one-shots of one job come at one
+  loudness (louder takes are lowered: `gainDb`), so any of them can be played at random. `sound.onsets` lists the
+  seconds at which a second sound starts inside a one-shot (absent: none). A subject that implies an ending draws
+  it whatever the words say ("a shell falling" ends in an impact): pick a take without onsets, cut before the first
+  one, or describe only the sound itself ("a long whistling whine falling in pitch").
 - Every job type that makes files takes a `name` (e.g. "storm wall" → `storm_wall_1a2b3c`): set one when making
   several assets of one kind, so their files and prefabs can be told apart.
 
