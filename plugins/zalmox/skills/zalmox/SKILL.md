@@ -68,7 +68,11 @@ run `npx zalmox login` once.
   tile, and the normal, height, roughness and AO maps are derived from it. The albedo output's metadata has
   `symmetry` (`flagged`: the layout is mirrored and reads as a kaleidoscope when tiled, even after its one re-roll)
   and `seam` (`flagged`: a seam still shows through the middle of the tile). If either is flagged, tell the user and
-  try another seed.
+  try another seed. `reliefStrength` sets how steep the normal map is (its steepest tenth tilts about 30, 45 or 60
+  degrees; `normalTilt` in the metadata): medium suits most surfaces, also rock under a strong light. A rock face or
+  other deep relief often comes out lit, with shadow bands in the albedo (`brightness.dark` under about 0.85 in the
+  metadata): `delight: on` evens them out and keeps the relief in the normal map; leave it off for surfaces with
+  dark and light parts of their own.
 - VFX: the effect's colours and character ("violet arcane burst with gold sparks"), and choose `effect` (explosion,
   fire, smoke, vortex, magic, electric, lightning, thruster). `vortex` is a tornado, dust devil or whirlpool spinning in
   place; `electric` an arc between two points; `lightning` a strike from the sky that flashes and fades. Loops
