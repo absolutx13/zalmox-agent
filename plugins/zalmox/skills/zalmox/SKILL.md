@@ -96,7 +96,11 @@ run `npx zalmox login` once.
   place; `electric` an arc between two points; `lightning` a strike from the sky that flashes and fades. Loops
   (`loop: on`) suit fire, smoke, vortices, electric arcs and thrusters. `colour: neutral` gives a white/grey effect
   to tint in the game. Results vary a lot by seed: `variations: 2` or `4` (priced per variation) makes several at
-  once with a contact sheet (`contact_sheet` output) to pick from.
+  once with a contact sheet (`contact_sheet` output) to pick from. Name the fire and what flies from it, never what
+  bursts or what it stands on: "a cannon shell bursting on the ground" draws the shell, and "on rocky ground" a
+  rock, as a hole or a notch at the base of the fireball in every frame. A one-shot never ends on a bright frame: when
+  the clip was cut while still burning, its last third is faded to nothing (`fadedOut`: how many frames, in the
+  flipbook's metadata and on a layered effect's generated layer; absent: it ended by itself).
 - `vfx-smoke`: try `preview: on` first (6×6 frames, 128 px, a coarse simulation, a fraction of the time and credits,
   draft only), then run the chosen seed full size. `color` only tints the material: for several colours make one
   smoke and recolour it in Unity; for different smoke change the seed.
@@ -105,11 +109,14 @@ run `npx zalmox login` once.
   as `unsaid`). A one-shot is cut to its sound and is never longer than `length`; a loop (`loop: on`) is the steady
   part of the take, so it can be a little shorter than `length`: read `seconds`. A loop keeps its own rise and fall
   (gusts, chimes, cracks); pass `evenness: bed` for a hum, a drone or an engine, which should sit at one level
-  (`sound.swingDb` says how far a loop's level moves: a bed a few dB, an ambience ten or more). Pick takes from each
+  (`sound.swingDb` says how far a loop's level moves: a bed a dB or two, an ambience six or more). Every loop comes
+  at about -20 LUFS, so loops of different jobs sit level with each other: drips or clanks over a quiet ground get
+  there with their sharpest peaks held down (`sound.limitedDb`, at most 8 dB; absent: none). Pick takes from each
   `.ogg` output's metadata without listening: `sound` has `lufs`, `peakDb`, `rmsDb`, `soundSeconds`, the `rumble`
   share that was removed (under 28 Hz) and the `bass` / `mid` / `high` shares of its energy (split at 150 Hz and
   8 kHz); `checks` lists what is wrong with a take (`bass`: nearly all under 150 Hz, silent on small speakers;
-  `silence`; `rumble`; `quiet`). A flagged take was already made a second time and the better one kept (`rerolled`),
+  `silence`; `rumble`; `quiet`; `short`: a loop under two thirds of the `length` asked, because the take faded
+  away). A flagged take was already made a second time and the better one kept (`rerolled`),
   so a take that is still flagged needs different words: prompts naming something low ("deep rumble", "low hum")
   often give bass only; add what is heard above it ("with a hissing, crackling top"). The one-shots of one job come
   at one loudness and none is louder than -16 LUFS (louder takes are lowered: `gainDb`), so any of them can be
