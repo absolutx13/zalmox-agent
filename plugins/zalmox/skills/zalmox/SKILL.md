@@ -52,6 +52,23 @@ run `npx zalmox login` once.
   other when the object is clearly symmetric, and leaves it alone otherwise; the model output's metadata has
   `symmetry` (score 0–1, `applied`, `kept`, or the `reason` it wasn't mirrored). `symmetry: x` forces a mirror
   across the left-right (X) plane. Leave it off for characters holding something, plants and rocks.
+- Backs of characters, capes and packs: `backView: generate` draws the object from behind first and models the shape
+  from both views. The drawing is checked against the picture (its outline must be the picture's mirror image, in the
+  same colours; on Final the vision model checks it isn't the front again), redrawn once if it fails, and left out
+  if that fails as well.
+  Read the model output's `backView` metadata: `used`, `score` (0–1), `rejected` (each with `problems`). When `used`
+  is false the model was made from the front alone and `checks` has a `backView` entry: tell the user. It works on
+  pictures seen straight from the front; three-quarter views from above rarely pass, so leave it off for those. The
+  check can't see a part invented inside the outline: look at the `back_view.png` output when the back matters.
+- Textures (`pbr-texture`): describe the surface and its colours ("dry cracked desert earth with pebbles, warm
+  ochre"). Don't write "seamless", "tileable" or "no symmetry": the tiling is done for you, and naming symmetry tends
+  to paint it. `material` sets the kind of surface only; colours come from the description. `size` is 1024 (default),
+  2048 or 4096 pixels per side (8 and 12 credits instead of 5). To turn the user's own picture into a material, pass
+  it as the image (`image_path` / `--image`) with a prompt that says what it shows: its centre square is made to
+  tile, and the normal, height, roughness and AO maps are derived from it. The albedo output's metadata has
+  `symmetry` (`flagged`: the layout is mirrored and reads as a kaleidoscope when tiled, even after its one re-roll)
+  and `seam` (`flagged`: a seam still shows through the middle of the tile). If either is flagged, tell the user and
+  try another seed.
 - VFX: the effect's colours and character ("violet arcane burst with gold sparks"), and choose `effect` (explosion,
   fire, smoke, vortex, magic, electric, lightning, thruster). `vortex` is a tornado, dust devil or whirlpool spinning in
   place; `electric` an arc between two points; `lightning` a strike from the sky that flashes and fades. Loops
