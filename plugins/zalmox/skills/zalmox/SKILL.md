@@ -65,7 +65,12 @@ run `npx zalmox login` once.
   to paint it. `material` sets the kind of surface only; colours come from the description. `size` is 1024 (default),
   2048 or 4096 pixels per side (8 and 12 credits instead of 5). To turn the user's own picture into a material, pass
   it as the image (`image_path` / `--image`) with a prompt that says what it shows: its centre square is made to
-  tile, and the normal, height, roughness and AO maps are derived from it. Pictures whose opposite edges look alike
+  tile, and the normal, height, roughness and AO maps are derived from it. A picture that already tiles (a painted
+  tile, a texture from a library) is recognised and kept exactly as it is: `tileable` is `auto` by default (its
+  edges are measured), `yes` keeps it without measuring, `no` repaints its seam anyway; the metadata's `picture`
+  entry and `seam.kept` say what happened. The measuring can be wrong on fine, even surfaces (dust, sand): if a kept
+  picture shows a faint seam where it repeats, make it again with `tileable: no`; if a picture that did tile was
+  repainted (`seam.kept` false), with `tileable: yes`. Pictures whose opposite edges look alike
   (the same kind of surface left and right, top and bottom) join best; where they differ, the repainted seam shows
   as a strip of its own through the middle of the tile. The albedo output's metadata has
   `symmetry` (`flagged`: the layout is mirrored and reads as a kaleidoscope when tiled, even after its one re-roll)
