@@ -52,7 +52,8 @@ run `npx zalmox login` once.
 - Two-sided objects (drones, vehicles, crates, furniture) can come out with uneven sides: rotors at different
   heights, one arm fused into the hull. `symmetry: auto` (with `straighten: on`) mirrors the better half onto the
   other when the object is clearly symmetric, and leaves it alone otherwise; the model output's metadata has
-  `symmetry` (score 0–1, `applied`, `kept`, or the `reason` it wasn't mirrored). `symmetry: x` forces a mirror
+  `symmetry` (score 0–1, `applied`, `kept`, or the `reason` it wasn't mirrored; from 0.65 up it mirrors unless the
+  picture disagrees, and from 0.55 when the model's sides face an axis, which `straighten: on` gives, and the picture agrees). `symmetry: x` forces a mirror
   across the left-right (X) plane. Leave it off for characters holding something, plants and rocks.
 - Backs of characters, capes and packs: `backView: generate` draws the object from behind first and models the shape
   from both views. The drawing is checked against the picture (its outline must be the picture's mirror image, in the
@@ -62,6 +63,9 @@ run `npx zalmox login` once.
   is false the model was made from the front alone and `checks` has a `backView` entry: tell the user. It works on
   pictures seen straight from the front; three-quarter views from above rarely pass, so leave it off for those. The
   check can't see a part invented inside the outline: look at the `back_view.png` output when the back matters.
+  `backView: force` uses the first drawing whatever the check says. Use it only after looking: when a `generate` job's
+  refused drawing (`back_view_rejected_1.png`) shows the same object from behind with nothing added, run again with the
+  same `seed` and `force`; the output's `checks` then has a `backViewPose` entry reminding you to look at the back.
 - Textures (`pbr-texture`): describe the surface and its colours ("dry cracked desert earth with pebbles, warm
   ochre"). Don't write "seamless", "tileable" or "no symmetry": the tiling is done for you, and naming symmetry tends
   to paint it. `material` sets the kind of surface only; colours come from the description. `size` is 1024 (default),
