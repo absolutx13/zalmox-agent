@@ -68,7 +68,9 @@ run `npx zalmox login` once.
   same `seed` and `force`; the output's `checks` then has a `backViewPose` entry reminding you to look at the back.
 - Textures (`pbr-texture`): describe the surface and its colours ("dry cracked desert earth with pebbles, warm
   ochre"). Don't write "seamless", "tileable" or "no symmetry": the tiling is done for you, and naming symmetry tends
-  to paint it. `material` sets the kind of surface only; colours come from the description. `size` is 1024 (default),
+  to paint it. Describe the pieces the surface is made of, not one thing: "the surface of a star" or "the sun's
+  photosphere" came out as cracked mud with craters, then as one mirrored cross. A ground of many small pieces
+  avoids that, but the shape named is the shape drawn ("plasma pebbles" gave a ball pit of glossy spheres). `material` sets the kind of surface only; colours come from the description. `size` is 1024 (default),
   2048 or 4096 pixels per side (8 and 12 credits instead of 5). To turn the user's own picture into a material, pass
   it as the image (`image_path` / `--image`) with a prompt that says what it shows: its centre square is made to
   tile (a narrow band along its edges is repainted so that they meet; the rest stays as it is and where it is,
@@ -154,13 +156,16 @@ job's GLB), `motions` a JSON list. `zalmox types animate` (or `list_job_types`, 
   - Optional `"cut":[px,py,pz,nx,ny,nz]` and `"bounds":[min xyz, max xyz]` split the mesh cleanly along a plane.
 - A propeller, fan or rotor disc needs no spheres: `{"type":"rotor","name","hub":[x,y,z]}` finds it from one point on
   its hub (its top or centre), cuts it free of its arm, caps the cut, puts the pivot on its centre and spins it
-  (`speed`, 0.25-8 turns a second, default 3). Optional: `"axis"` (default up, turned to a tilted rotor's own plane;
+  (`speed`, 0.25-8 turns a second, default 3). Optional: `"axis"` (default up, turned to the way a tilted rotor faces;
   give `[0,-1,0]` for one hanging under its arm), `"radius"` and `"depth"` (metres: how far out, and how far under
   the hub along the axis, the rotor reaches).
   - Hub only works on clean rotors: a disc or duct, a rotor on a shaft above its arm, blades on a round motor.
   - Generated props are often irregular or fused to a neighbour's blades. Then the job fails asking for the radius, or
     the radius it reports is clearly not the rotor's: give `radius` and `depth`, read off the GLB. With both, the
     rotor is everything inside that cylinder, which always works.
+  - Put the hub on the rotor's centre, not on the highest point there: on a tilted rotor that is a blade's tip.
+  - On a mirror-symmetric model, a left and a right rotor whose hubs mirror each other get mirrored pivots and axes
+    (each part's `mirrors` names the other), so the pair spins alike.
   - A wheel can take `"hub"` (with its `"axis"`) instead of spheres and pivot, and is found the same way.
 - Each motion is one clip, one after another on one timeline, with an Animator state in the Unity prefab: `Hover`
   and the other presets; `<Name>Spin` for a wheel or rotor, `<Name>Open`/`<Name>Close` for a hinge or slide. The
