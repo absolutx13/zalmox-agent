@@ -108,6 +108,10 @@ run `npx zalmox login` once.
 - `vfx-smoke`: try `preview: on` first (6×6 frames, 128 px, a coarse simulation, a fraction of the time and credits,
   draft only), then run the chosen seed full size. `color` only tints the material: for several colours make one
   smoke and recolour it in Unity; for different smoke change the seed.
+- Skyboxes (`skybox`): the `.hdr` output's metadata (and `<name>_sky.json`) says where to light the scene from:
+  `sunDirection`, with `sunFrom` saying how it was found: `disc` (a painted sun, also `sunUV`), `glow` (no disc, the
+  brightest part of the sky: `sunBearing` and `sunElevation`) or `default` (nothing stood out: overcast, night,
+  space; a soft light from high up, not a measurement).
 - Sound effects (`sfx`): say only what should be heard. The model has no negative prompt and naming a sound tends
   to produce it, so "no explosion, no music" parts are left out of what it is given (the clip's metadata lists them
   as `unsaid`). A one-shot is cut to its sound and is never longer than `length`; a loop (`loop: on`) is the steady
