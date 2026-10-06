@@ -38,6 +38,16 @@ run `npx zalmox login` once.
    Animating the model keeps the map (`emissive.carried` in the animated model's metadata).
 6. **Don't retry blindly.** A failed job returns its credits. Read the error, change what it points at (prompt,
    image, option), and tell the user before trying again.
+7. **Three or more things: one batch, not a loop.** `create_batch` (CLI: `zalmox batch create set.json --wait --out
+   <dir>`) queues the whole set at once, so the jobs run one after another by themselves and a cloud GPU stays on the
+   set from the first job to the last. A loop that waits for each job's download before starting the next leaves the
+   GPU idle between jobs: on a slow link a 250 MB model takes longer to fetch than the GPU waits before it shuts
+   down, and every job then pays for a new start (about 7 minutes). In a batch a job that failed because of the
+   machine (out of memory, a lost connection) is run once more by itself; `cancel_batch` / `zalmox batch cancel
+   <id>` stops what hasn't started, with a refund. Fetch the files with `download_batch` / `zalmox batch download
+   <id> --out <dir>` (a folder per job; run again after a break, it fetches only what is missing), and leave out
+   what isn't needed: `skip_roles` / `--skip unitypackage,fbx` when only the GLB is wanted (the Unity package is
+   about a third of a model's download). Tell the user the set's total before starting it.
 
 ## Prompts that work
 
