@@ -130,6 +130,21 @@ run `npx zalmox login` once.
   `sunDirection`, with `sunFrom` saying how it was found: `disc` (a painted sun, also `sunUV`), `glow` (no disc, the
   brightest part of the sky: `sunBearing` and `sunElevation`) or `default` (nothing stood out: overcast, night,
   space; a soft light from high up, not a measurement).
+- Voice lines: for one line use `voice`; for a script use `voice-script`, which speaks every line in ONE job (the
+  voice model loads once, and each character keeps one voice). `voice`: `text` is the line as spoken (write numbers
+  and odd names the way they sound), `voice` says who is speaking in words (age, sex, pitch, texture, accent,
+  character), `delivery` how it is said ("whispered, frightened"), `takes` up to 4 readings to pick from.
+  `voice-script`: `characters` and `lines` are JSON lists passed as strings:
+  `characters: '[{"name":"merchant","voice":"a gruff middle-aged man with a deep, gravelly voice"}]'`,
+  `lines: '[{"id":"merchant_01","character":"merchant","text":"Ah, a customer!","delivery":"friendly, sly"}]'`
+  (CLI: `zalmox create voice-script --script script.json` with `{ "characters": [...], "lines": [...] }`). Up to 80
+  lines and 12 characters, priced per line; `id` is optional and names each line's files (`<id>.ogg`, `<id>.wav`);
+  `<name>_lines.json` lists every line with its file, and the Unity prefab plays a line by its id. To use a voice
+  again in a later job, pass a clip as `sourceVoice` in place of `voice`: a `voice` job's id or take, or a script
+  character's `<name>_<character>_voice` clip (its asset id). A line whose `check` is `rushed` or `slow` probably
+  dropped or repeated words: make that line again with `voice` and the character's clip as `sourceVoice`. Voices are
+  made from descriptions; `sourceVoice` only takes the user's own Zalmox voice clips, never a recording, and
+  imitating a real person's voice is not allowed.
 - Sound effects (`sfx`): say only what should be heard. The model has no negative prompt and naming a sound tends
   to produce it, so "no explosion, no music" parts are left out of what it is given (the clip's metadata lists them
   as `unsaid`). A one-shot is cut to its sound and is never longer than `length`; a loop (`loop: on`) is the steady
