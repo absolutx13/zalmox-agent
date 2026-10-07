@@ -48,6 +48,12 @@ run `npx zalmox login` once.
    <id> --out <dir>` (a folder per job; run again after a break, it fetches only what is missing), and leave out
    what isn't needed: `skip_roles` / `--skip unitypackage,fbx` when only the GLB is wanted (the Unity package is
    about a third of a model's download). Tell the user the set's total before starting it.
+8. **Say when a job will be public.** Without a plan, what a user makes is public: its preview picture appears in
+   the gallery at zalmox.io/gallery (the files and the prompt stay theirs, and nobody else can download them). With
+   any plan, or for a cloud job on bought credits, a job is private unless `visibility: "public"` (CLI:
+   `--visibility public`) is given. A started job says `visibility: public` when it is; if the user is working on
+   something unreleased and has no plan, tell them before the first job, not after. Asking for `private` without a
+   plan is refused rather than quietly published.
 
 ## Prompts that work
 
