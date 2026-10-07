@@ -133,7 +133,7 @@ run `npx zalmox login` once.
 - Voice lines: for one line use `voice`; for a script use `voice-script`, which speaks every line in ONE job (the
   voice model loads once, and each character keeps one voice). `voice`: `text` is the line as spoken (write numbers
   and odd names the way they sound), `voice` says who is speaking in words (age, sex, pitch, texture, accent,
-  character), `delivery` how it is said ("whispered, frightened"), `takes` up to 4 readings to pick from.
+  character), `delivery` how it is said ("whispered, frightened": the performance, not the medium; "over a radio" can put that effect into the sound), `takes` up to 4 readings to pick from.
   `voice-script`: `characters` and `lines` are JSON lists passed as strings:
   `characters: '[{"name":"merchant","voice":"a gruff middle-aged man with a deep, gravelly voice"}]'`,
   `lines: '[{"id":"merchant_01","character":"merchant","text":"Ah, a customer!","delivery":"friendly, sly"}]'`
