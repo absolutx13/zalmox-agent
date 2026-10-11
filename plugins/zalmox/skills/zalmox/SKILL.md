@@ -114,9 +114,13 @@ run `npx zalmox login` once.
   from above. The metadata's `roughness` entry (`level`, which is `custom` when a figure was given; `smoothness`, `mean`, `smooth`,
   `rough`) says what came out.
 - VFX: the effect's colours and character ("violet arcane burst with gold sparks"), and choose `effect` (explosion,
-  fire, smoke, vortex, magic, electric, lightning, thruster). `vortex` is a tornado, dust devil or whirlpool spinning in
-  place; `electric` an arc between two points; `lightning` a strike from the sky that flashes and fades. Loops
-  (`loop: on`) suit fire, smoke, vortices, electric arcs and thrusters. `colour: neutral` gives a white/grey effect
+  fire, smoke, drift, vortex, magic, electric, lightning, thruster) by how it should move, not by its name: the
+  type decides more than the words do. `explosion` always becomes rolling fire clouds; `smoke` always rises; `drift`
+  is haze, mist, dust or blown snow moving low along the ground; `magic` starts small, grows outward once and fades
+  (a burst of separate motes or spores is not something any type draws yet: it comes out as a cloud); `vortex` a tornado, dust devil or whirlpool spinning in place; `electric` an arc between two points;
+  `lightning` a strike from the sky that flashes and fades. Effects are drawn as light on black: a black or very dark
+  subject (tar, ink, a shadow) comes back as its highlights only, so describe what is lit. Loops
+  (`loop: on`) suit fire, smoke, drift, vortices, electric arcs and thrusters. `colour: neutral` gives a white/grey effect
   to tint in the game. Results vary a lot by seed: `variations: 2` or `4` (priced per variation) makes several at
   once with a contact sheet (`contact_sheet` output) to pick from. Name the fire and what flies from it, never what
   bursts or what it stands on: "a cannon shell bursting on the ground" draws the shell, and "on rocky ground" a
