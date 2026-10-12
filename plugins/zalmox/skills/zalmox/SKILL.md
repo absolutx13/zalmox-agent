@@ -116,9 +116,14 @@ run `npx zalmox login` once.
 - VFX: the effect's colours and character ("violet arcane burst with gold sparks"), and choose `effect` (explosion,
   fire, smoke, drift, vortex, magic, electric, lightning, thruster) by how it should move, not by its name: the
   type decides more than the words do. `explosion` always becomes rolling fire clouds; `smoke` always rises; `drift`
-  is haze, mist, dust or blown snow moving low along the ground; `magic` starts small, grows outward once and fades
-  (a burst of separate motes or spores is not something any type draws yet: it comes out as a cloud); `vortex` a tornado, dust devil or whirlpool spinning in place; `electric` an arc between two points;
-  `lightning` a strike from the sky that flashes and fades. Effects are drawn as light on black: a black or very dark
+  is a band of haze, mist, dust or blown snow low along the ground that crosses the frame and repeats sideways (the
+  sidecar says `tilesSideways`: stand quads end to end, edges touching, for a long strip); `magic` starts small,
+  grows outward once and fades, and a ring, shock wave or ripple under it is a thin hollow ring that widens (a
+  burst of separate motes or spores is not something any type draws yet: it comes out as a cloud); `vortex` a
+  tornado, dust devil or whirlpool spinning in place; `electric` an arc between two points; `lightning` a strike
+  from the sky that flashes and fades. A jet of gas or steam in any direction (a vent, a geyser, a leak) is a
+  `thruster` with the gas described ("a violent jet of white pressurised steam", `blend: alpha`, `loop: on`): it
+  is drawn from the left edge, so turn the quad to point it; `smoke` as a one-shot gives a puff with a wide foot. Effects are drawn as light on black: a black or very dark
   subject (tar, ink, a shadow) comes back as its highlights only, so describe what is lit. Loops
   (`loop: on`) suit fire, smoke, drift, vortices, electric arcs and thrusters. `colour: neutral` gives a white/grey effect
   to tint in the game. Results vary a lot by seed: `variations: 2` or `4` (priced per variation) makes several at
