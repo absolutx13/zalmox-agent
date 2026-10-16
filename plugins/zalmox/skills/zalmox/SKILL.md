@@ -24,7 +24,8 @@ run `npx zalmox login` once.
      full explosion, fire or impact with lit smoke, sparks and a light (`duration` sets how long a one-shot plays;
      an impact defaults to 0.5 s). Pure smoke simulations: `vfx-smoke`. VFX jobs also save their JSON sidecar
      (layers, grid, fps) loose as a `sidecar` output, so there's no need to unpack the Unity package to read it.
-   - A tiling material: `pbr-texture`. Sky: `skybox`. Landscape: `terrain`. Concept art or icons: `image`.
+   - A tiling material: `pbr-texture`. Sky: `skybox`; fixing a finished sky's seam or zenith: `skybox-repair`.
+     Landscape: `terrain`. Concept art or icons: `image`.
 4. **Wait and save.** Jobs take one to ten minutes. `wait_for_job` with a `download_dir` inside the user's project
    (e.g. `Assets/Zalmox/` in a Unity project) saves the files; if it says the job is still running, call it again.
    CLI: `--wait --out <dir>`. A queued cloud job whose stage reads "Starting a cloud GPU (about N min)" is waiting
@@ -139,6 +140,13 @@ run `npx zalmox login` once.
   `sunDirection`, with `sunFrom` saying how it was found: `disc` (a painted sun, also `sunUV`), `glow` (no disc, the
   brightest part of the sky: `sunBearing` and `sunElevation`) or `default` (nothing stood out: overcast, night,
   space; a soft light from high up, not a measurement).
+- Repairing a sky (`skybox-repair`): give a finished 2:1 panorama (`image_path` / `--image`, at least 2048 wide,
+  up to 20 MB: save an 8K sky as JPEG). It fixes the left/right seam (`seam`: auto repaints it when its sides
+  don't match or a sun crosses it) and the zenith (`zenith`: auto smooths the pinch overhead and clears anything
+  that isn't sky; `wide` covers about 41 deg, enough for an old repaint's disc overhead), and changes nothing else:
+  the result keeps the picture's size, with the same files as `skybox`. `kind` should match the sky (no stars are
+  added). The `.hdr` metadata's `repair` says what was done (`seam.method`, mismatch before and after,
+  `zenith.fill`, `changedShare`).
 - Voice lines: for one line use `voice`; for a script use `voice-script`, which speaks every line in ONE job (the
   voice model loads once, and each character keeps one voice). `voice`: `text` is the line as spoken (write numbers
   and odd names the way they sound), `voice` says who is speaking in words (age, sex, pitch, texture, accent,
