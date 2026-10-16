@@ -35,7 +35,9 @@ run `npx zalmox login` once.
    (columns × rows are in the job's outputs). A model whose picture showed lights (a glowing eye, a light strip) also
    comes with `<name>_emissive.png`, already the emission map of the GLB and of the Unity material: use it for glow
    rather than deriving one from the albedo (`emissive: off` skips it; no file means no lights were found, or that
-   the picture's view couldn't be told from its opposite: the model output's `emissive.reason` says which).
+   the picture's view couldn't be told from its opposite: the model output's `emissive.reason` says which). A large
+   coloured glow (lava, a big screen) lights all the paint of its colour (`emissive.spread`); a large, broad, pale lit
+   patch is taken for lit hull and dropped (`emissive.droppedPale`).
    Animating the model keeps the map (`emissive.carried` in the animated model's metadata).
 6. **Don't retry blindly.** A failed job returns its credits. Read the error, change what it points at (prompt,
    image, option), and tell the user before trying again.
@@ -143,7 +145,8 @@ run `npx zalmox login` once.
 - Repairing a sky (`skybox-repair`): give a finished 2:1 panorama (`image_path` / `--image`, at least 2048 wide,
   up to 20 MB: save an 8K sky as JPEG). It fixes the left/right seam (`seam`: auto repaints it when its sides
   don't match or a sun crosses it) and the zenith (`zenith`: auto smooths the pinch overhead and clears anything
-  that isn't sky; `wide` covers about 41 deg, enough for an old repaint's disc overhead), and changes nothing else:
+  that isn't sky; `wide` covers about 41 deg, enough for an old repaint's disc overhead, and keeps a painted sun inside it;
+  `off` for a zenith framed by trees or a canopy, which a fill leaves as a ring round a hole), and changes nothing else:
   the result keeps the picture's size, with the same files as `skybox`. `kind` should match the sky (no stars are
   added). The `.hdr` metadata's `repair` says what was done (`seam.method`, mismatch before and after,
   `zenith.fill`, `changedShare`).
