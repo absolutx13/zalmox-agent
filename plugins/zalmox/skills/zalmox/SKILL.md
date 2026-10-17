@@ -25,8 +25,11 @@ run `npx zalmox login` once.
      `0.3<x<0.7 y>0.8`, or a wedge cut along the radius, `angle -62..-28 about z` (round the model's centre or
      `at x,y,z`; about z 0 deg is +X and 90 deg +Y, about y 0 deg is +Z and 90 deg +X, about x 0 deg is +Y and 90 deg +Z);
      `units` fraction (default: 0-1 across the model's bounds) or metres. `cap`: closed (default, a colour from the
-     cut), glow (the emissive map's brightest colour: a broken end that glows) or open. Textures, UVs and the emissive
-     map are kept, and the model keeps its scale (a given `heightCm` is the cut model's). CPU only, 2 credits.
+     cut), glow (the model's light colour, or `glowColour` #rrggbb: a broken end that glows) or open; with a wedge,
+     `glowBand` N paints the model N degrees beside each side of the wedge into the emissive map (a lit band that reads
+     from far off). Only closed outlines can be capped: a model that isn't watertight keeps those openings, and the
+     model's metadata `cut` says so (`openEdges`, `notes`) along with what was cut. Textures, UVs and the emissive map
+     are kept, and the model keeps its scale (a given `heightCm` is the cut model's). CPU only, 2 credits.
    - Explosions, fire, smoke, magic, electricity, thrusters as a flipbook: `vfx-flipbook`, or `vfx-layered` for a
      full explosion, fire or impact with lit smoke, sparks and a light (`duration` sets how long a one-shot plays;
      an impact defaults to 0.5 s). Pure smoke simulations: `vfx-smoke`. VFX jobs also save their JSON sidecar
