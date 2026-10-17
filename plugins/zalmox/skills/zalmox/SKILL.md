@@ -22,9 +22,11 @@ run `npx zalmox login` once.
    - Motion for a model: `animate` (see "Animating a model" below for its `motions` list).
    - Part of a model removed (a base, a stand, everything below a line): `cut`, with `sourceModel` and `remove` as
      bounds on the model's axes (glTF: X right, Y up, Z front), e.g. `y<0.1` (a plane cut), `x>0.6 z<0.2`,
-     `0.3<x<0.7 y>0.8`; `units` fraction (default: 0-1 across the model's bounds) or metres. The opening is closed in
-     a colour from the cut; textures, UVs and the emissive map are kept, and the model keeps its scale (a given
-     `heightCm` is the cut model's). CPU only, 2 credits.
+     `0.3<x<0.7 y>0.8`, or a wedge cut along the radius, `angle -62..-28 about z` (round the model's centre or
+     `at x,y,z`; about z 0 deg is +X and 90 deg +Y, about y 0 deg is +Z and 90 deg +X, about x 0 deg is +Y and 90 deg +Z);
+     `units` fraction (default: 0-1 across the model's bounds) or metres. `cap`: closed (default, a colour from the
+     cut), glow (the emissive map's brightest colour: a broken end that glows) or open. Textures, UVs and the emissive
+     map are kept, and the model keeps its scale (a given `heightCm` is the cut model's). CPU only, 2 credits.
    - Explosions, fire, smoke, magic, electricity, thrusters as a flipbook: `vfx-flipbook`, or `vfx-layered` for a
      full explosion, fire or impact with lit smoke, sparks and a light (`duration` sets how long a one-shot plays;
      an impact defaults to 0.5 s). Pure smoke simulations: `vfx-smoke`. VFX jobs also save their JSON sidecar
