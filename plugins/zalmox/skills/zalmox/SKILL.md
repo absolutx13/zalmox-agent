@@ -20,6 +20,11 @@ run `npx zalmox login` once.
    - A 3D model from a description: `text-to-3d`. From a picture: `image-to-3d` (`image_path` / `--image`).
    - A new look for an existing model: `retexture` (its `sourceModel` is the model asset's id).
    - Motion for a model: `animate` (see "Animating a model" below for its `motions` list).
+   - Part of a model removed (a base, a stand, everything below a line): `cut`, with `sourceModel` and `remove` as
+     bounds on the model's axes (glTF: X right, Y up, Z front), e.g. `y<0.1` (a plane cut), `x>0.6 z<0.2`,
+     `0.3<x<0.7 y>0.8`; `units` fraction (default: 0-1 across the model's bounds) or metres. The opening is closed in
+     a colour from the cut; textures, UVs and the emissive map are kept, and the model keeps its scale (a given
+     `heightCm` is the cut model's). CPU only, 2 credits.
    - Explosions, fire, smoke, magic, electricity, thrusters as a flipbook: `vfx-flipbook`, or `vfx-layered` for a
      full explosion, fire or impact with lit smoke, sparks and a light (`duration` sets how long a one-shot plays;
      an impact defaults to 0.5 s). Pure smoke simulations: `vfx-smoke`. VFX jobs also save their JSON sidecar
