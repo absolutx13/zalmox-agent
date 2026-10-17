@@ -27,7 +27,7 @@ run `npx zalmox login` once.
      `units` fraction (default: 0-1 across the model's bounds) or metres. `cap`: closed (default, a colour from the
      cut), glow (the model's light colour, or `glowColour` #rrggbb: a broken end that glows) or open; with a wedge,
      `glowBand` N paints the model N degrees beside each side of the wedge into the emissive map (a lit band that reads
-     from far off). Only closed outlines can be capped: a model that isn't watertight keeps those openings, and the
+     from far off; `glowMask: cracks` lights only its dark cracks and seams, a lit break rather than painted rock). Only closed outlines can be capped: a model that isn't watertight keeps those openings, and the
      model's metadata `cut` says so (`openEdges`, `notes`) along with what was cut. Textures, UVs and the emissive map
      are kept, and the model keeps its scale (a given `heightCm` is the cut model's). CPU only, 2 credits.
    - Explosions, fire, smoke, magic, electricity, thrusters as a flipbook: `vfx-flipbook`, or `vfx-layered` for a
