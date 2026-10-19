@@ -30,13 +30,16 @@ run `npx zalmox login` once.
      from far off; `glowMask: cracks` lights only its dark cracks and seams, a lit break rather than painted rock). Only closed outlines can be capped: a model that isn't watertight keeps those openings, and the
      model's metadata `cut` says so (`openEdges`, `notes`) along with what was cut. Textures, UVs and the emissive map
      are kept, and the model keeps its scale (a given `heightCm` is the cut model's). CPU only, 2 credits.
-   - A tree for a game: `tree`, not `text-to-3d` (image-to-3D makes the crown one lumpy surface). `species` broadleaf
-     or pine, optional `heightM`, and `leaves` / `bark` to describe a leaf sprig and the bark ("a cluster of red maple
+   - A tree for a game: `tree`, not `text-to-3d` (image-to-3D makes the crown one lumpy surface). `species` broadleaf,
+     pine, pine_snow, juniper (twisted, wind-swept), dry (bare), snag (a broken trunk) or charred (bare, glowing ember
+     cracks: a bark emissive map), optional `heightM`, and `leaves` / `bark` to describe a leaf sprig and the bark ("a cluster of red maple
      leaves on a twig"). It grows the branches, puts the leaves on cut-out cards (a 2x2 sprig atlas, alpha cutout
      0.45) and gives LOD0-2 plus an 8-view impostor (LOD3, crossed cards); the Unity package builds a prefab with a
      LODGroup, Bark and two-sided Leaves materials and a trunk collider. Wind data, R sway weight, G leaf flutter phase,
      B 1 on leaves, A branch level / 3: the FBX's vertex colours (Unity's mesh.colors) and the GLB's custom `_WIND`
-     attribute (not COLOR_0, which viewers multiply into the colour). 12 credits.
+     attribute (not COLOR_0, which viewers multiply into the colour). In Unity (Built-in, URP) the prefab's materials use
+     the shipped Zalmox/Foliage Wind shader, so trees sway and leaves flutter out of the box; a Zalmox > Wind component
+     in the scene sets direction, strength and gusts. 12 credits.
    - Animation clips for your own humanoid characters: `humanoid-clips`, `clips` = library clip names, comma
      separated (Hit_Knockback, Death01, LayToIdle, Walk_Loop, ...; `zalmox types humanoid-clips` and the animate
      guide list them). They come on a stock 1.76 m mannequin in one FBX; Unity imports it as Humanoid and the clips
