@@ -39,7 +39,8 @@ run `npx zalmox login` once.
      B 1 on leaves, A branch level / 3: the FBX's vertex colours (Unity's mesh.colors) and the GLB's custom `_WIND`
      attribute (not COLOR_0, which viewers multiply into the colour). In Unity (Built-in, URP) the prefab's materials use
      the shipped Zalmox/Foliage Wind shader, so trees sway and leaves flutter out of the box; a Zalmox > Wind component
-     in the scene sets direction, strength and gusts. 12 credits.
+     in the scene sets direction, strength and gusts. `snow` 0-100 lays snow on what faces the sky (pine_snow 60 by
+     default): painted into the far impostor, and per vertex in uv3.x (TEXCOORD_2) for the shader. 12 credits.
    - Animation clips for your own humanoid characters: `humanoid-clips`, `clips` = library clip names, comma
      separated (Hit_Knockback, Death01, LayToIdle, Walk_Loop, ...; `zalmox types humanoid-clips` and the animate
      guide list them). They come on a stock 1.76 m mannequin in one FBX; Unity imports it as Humanoid and the clips
