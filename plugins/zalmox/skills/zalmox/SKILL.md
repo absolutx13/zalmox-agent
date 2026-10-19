@@ -37,6 +37,10 @@ run `npx zalmox login` once.
      LODGroup, Bark and two-sided Leaves materials and a trunk collider. Wind data, R sway weight, G leaf flutter phase,
      B 1 on leaves, A branch level / 3: the FBX's vertex colours (Unity's mesh.colors) and the GLB's custom `_WIND`
      attribute (not COLOR_0, which viewers multiply into the colour). 12 credits.
+   - Animation clips for your own humanoid characters: `humanoid-clips`, `clips` = library clip names, comma
+     separated (Hit_Knockback, Death01, LayToIdle, Walk_Loop, ...; `zalmox types humanoid-clips` and the animate
+     guide list them). They come on a stock 1.76 m mannequin in one FBX; Unity imports it as Humanoid and the clips
+     retarget onto any Humanoid character. 1 credit, CPU.
    - Explosions, fire, smoke, magic, electricity, thrusters as a flipbook: `vfx-flipbook`, or `vfx-layered` for a
      full explosion, fire or impact with lit smoke, sparks and a light (`duration` sets how long a one-shot plays;
      an impact defaults to 0.5 s). Pure smoke simulations: `vfx-smoke`. VFX jobs also save their JSON sidecar
@@ -154,7 +158,9 @@ run `npx zalmox login` once.
   flipbook's metadata and on a layered effect's generated layer; absent: it ended by itself).
 - `vfx-smoke`: try `preview: on` first (6×6 frames, 128 px, a coarse simulation, a fraction of the time and credits,
   draft only), then run the chosen seed full size. `color` only tints the material: for several colours make one
-  smoke and recolour it in Unity; for different smoke change the seed.
+  smoke and recolour it in Unity; for different smoke change the seed. Big smoke over flat ground: turn on the
+  material's Ground fade (`_GroundFadeOn`, `_GroundFade` metres, needs the camera depth texture): the smoke thins out
+  above the ground behind it instead of meeting it in a hard straight line (soft particles alone can't, far off).
 - Skyboxes (`skybox`): the `.hdr` output's metadata (and `<name>_sky.json`) says where to light the scene from:
   `sunDirection`, with `sunFrom` saying how it was found: `disc` (a painted sun, also `sunUV`), `glow` (no disc, the
   brightest part of the sky: `sunBearing` and `sunElevation`) or `default` (nothing stood out: overcast, night,
