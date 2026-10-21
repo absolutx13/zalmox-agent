@@ -30,6 +30,15 @@ run `npx zalmox login` once.
      from far off; `glowMask: cracks` lights only its dark cracks and seams, a lit break rather than painted rock). Only closed outlines can be capped: a model that isn't watertight keeps those openings, and the
      model's metadata `cut` says so (`openEdges`, `notes`) along with what was cut. Textures, UVs and the emissive map
      are kept, and the model keeps its scale (a given `heightCm` is the cut model's). CPU only, 2 credits.
+   - A model to 3D print (a figurine, a miniature, a desk model): `print`, with `sourceModel`, `heightMm` (default 100,
+     base included), `process` fdm (filament, default) or resin, and `base` auto (default: flat when it stands on its
+     own, else a 3 mm round plinth), flat, plinth or none. It rebuilds the model as one closed, solid body (holes,
+     seams and stray bits mended or dropped), thickens parts thinner than the process's minimum wall (FDM 0.8 mm,
+     resin 0.5 mm: antennas, blades, cloth) round their middle so a slicer doesn't refuse them, and returns
+     `<name>.stl` and `<name>.3mf` (millimetres), a GLB to view and `<name>_preview.png` (thin walls left in red). The
+     STL's metadata is a report: size, volume, grams of PLA if solid, which beds it fits (180/220/256/350 mm), the
+     share of surface overhanging past 45 degrees (needs supports) and walls still under the minimum. Colour isn't
+     kept. Models that are working weapon parts (receivers, frames, suppressors) are refused. CPU only, 3 credits.
    - A tree for a game: `tree`, not `text-to-3d` (image-to-3D makes the crown one lumpy surface). `species` broadleaf,
      pine, pine_snow, juniper (twisted, wind-swept), dry (bare), snag (a broken trunk) or charred (bare, glowing ember
      cracks: a bark emissive map), optional `heightM`, and `leaves` / `bark` to describe a leaf sprig and the bark ("a cluster of red maple
