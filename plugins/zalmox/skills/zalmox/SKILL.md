@@ -53,7 +53,10 @@ run `npx zalmox login` once.
    - Animation clips for your own humanoid characters: `humanoid-clips`, `clips` = library clip names, comma
      separated (Hit_Knockback, Death01, LayToIdle, Walk_Loop, ...; `zalmox types humanoid-clips` and the animate
      guide list them). They come on a stock 1.76 m mannequin in one FBX; Unity imports it as Humanoid and the clips
-     retarget onto any Humanoid character. 1 credit, CPU.
+     retarget onto any Humanoid character. For an aimed strafe there are Walk_Bwd, Walk_L/Walk_R, Jog_Bwd_Loop,
+     Jog_Left_Loop/Jog_Right_Loop, Jog_Fwd_L_Loop/Jog_Fwd_R_Loop (in place, left foot down at the start like
+     Walk_Loop and Jog_Fwd_Loop), Turn90_L/Turn90_R (the body ends turned 90 degrees: use root motion or turn the
+     character at the end) and Hit_Stomach, Hit_Shoulder_L/Hit_Shoulder_R. 1 credit, CPU.
    - Explosions, fire, smoke, magic, electricity, thrusters as a flipbook: `vfx-flipbook`, or `vfx-layered` for a
      full explosion, fire or impact with lit smoke, sparks and a light (`duration` sets how long a one-shot plays;
      an impact defaults to 0.5 s). Pure smoke simulations: `vfx-smoke`. VFX jobs also save their JSON sidecar
@@ -63,7 +66,9 @@ run `npx zalmox login` once.
 4. **Wait and save.** Jobs take one to ten minutes. `wait_for_job` with a `download_dir` inside the user's project
    (e.g. `Assets/Zalmox/` in a Unity project) saves the files; if it says the job is still running, call it again.
    CLI: `--wait --out <dir>`. A queued cloud job whose stage reads "Starting a cloud GPU (about N min)" is waiting
-   for a GPU to boot (about 7 minutes when none is running): tell the user and keep waiting; it isn't stuck.
+   for a GPU to boot (about 7 minutes when none is running): tell the user and keep waiting; it isn't stuck. "Waiting for
+   a cloud GPU (RunPod has none free; …)" means none is free to rent yet: it keeps trying for up to the minutes it names,
+   then fails with the credits back; tell the user, keep waiting, or offer My GPU.
 5. **Report what you saved**: the files and what each is for. The `.unitypackage` imports into Unity (Assets →
    Import Package) and builds a ready prefab. `.glb` / `.fbx` are the model, and flipbook PNGs are sprite sheets
    (columns × rows are in the job's outputs). A model whose picture showed lights (a glowing eye, a light strip) also
