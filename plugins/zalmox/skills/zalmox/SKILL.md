@@ -56,7 +56,12 @@ run `npx zalmox login` once.
      retarget onto any Humanoid character. For an aimed strafe there are Walk_Bwd, Walk_L/Walk_R, Jog_Bwd_Loop,
      Jog_Left_Loop/Jog_Right_Loop, Jog_Fwd_L_Loop/Jog_Fwd_R_Loop (in place, left foot down at the start like
      Walk_Loop and Jog_Fwd_Loop), Turn90_L/Turn90_R (the body ends turned 90 degrees: use root motion or turn the
-     character at the end) and Hit_Stomach, Hit_Shoulder_L/Hit_Shoulder_R. 1 credit, CPU.
+     character at the end) and Hit_Stomach, Hit_Shoulder_L/Hit_Shoulder_R. Run_Fwd_Loop is a steady run (~4.4 m/s,
+     0.71 s cycle, low bounce) and Run_Bwd_Loop a backward run (~3 m/s), both in place, left foot first. Gestures,
+     right arm only, feet planted, starting and ending on Idle_Loop's first frame so they blend in and out of it:
+     Salute_Concord (hand to the brow), FistChest_Ascendancy (fist struck onto the left breast), HandRaise_Veil
+     (open hand slowly raised to shoulder height, a nod); Idle_LookAround_Loop is a 4 s idle looking left, then
+     right. The library has no finger bones: a fist or an open hand is up to your own hand pose. 1 credit, CPU.
    - Explosions, fire, smoke, magic, electricity, thrusters as a flipbook: `vfx-flipbook`, or `vfx-layered` for a
      full explosion, fire or impact with lit smoke, sparks and a light (`duration` sets how long a one-shot plays;
      an impact defaults to 0.5 s). Pure smoke simulations: `vfx-smoke`. VFX jobs also save their JSON sidecar
@@ -180,9 +185,15 @@ run `npx zalmox login` once.
   material's Ground fade (`_GroundFadeOn`, `_GroundFade` metres, needs the camera depth texture): the smoke thins out
   above the ground behind it instead of meeting it in a hard straight line (soft particles alone can't, far off).
 - Skyboxes (`skybox`): the `.hdr` output's metadata (and `<name>_sky.json`) says where to light the scene from:
-  `sunDirection`, with `sunFrom` saying how it was found: `disc` (a painted sun, also `sunUV`), `glow` (no disc, the
-  brightest part of the sky: `sunBearing` and `sunElevation`) or `default` (nothing stood out: overcast, night,
-  space; a soft light from high up, not a measurement).
+  `sunDirection`, with `sunFrom` saying how it was found: `disc` (a painted sun, also `sunUV`; a sun half sunk
+  behind a ridge counts), `glow` (no compact sun, the brightest part of the sky) or `default` (nothing stood out:
+  overcast, night, space; a soft light from high up, not a measurement). For `disc` and `glow`, `sunBearing` and
+  `sunElevation` are measured in the picture (the sun's centre, degrees from the panorama's horizon): a sun on a low
+  painted ridge can be below 0, while `sunDirection` never lights from lower than 5 deg up.
+  `sunHeight` (sunset only, 0-30 deg, empty by default): how high the sun should sit; the front view is painted
+  from a guide with the sun at that height and the nearest of three views is kept, so it lands near (usually within
+  about 3 deg), not exactly. The JSON then has `sunHeightAsked` beside the measured `sunElevation`: check that rather
+  than trusting the ask.
 - Repairing a sky (`skybox-repair`): give a finished 2:1 panorama (`image_path` / `--image`, at least 2048 wide,
   up to 20 MB: save an 8K sky as JPEG). It fixes the left/right seam (`seam`: auto repaints it when its sides
   don't match or a sun crosses it) and the zenith (`zenith`: auto smooths the pinch overhead and clears anything
