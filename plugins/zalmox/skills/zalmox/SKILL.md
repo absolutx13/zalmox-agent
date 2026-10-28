@@ -1,6 +1,6 @@
 ---
 name: zalmox
-description: Generate game-ready assets with Zalmox (zalmox.io) - 3D models from text or images, retextured or animated models, VFX flipbooks, PBR textures, skyboxes, terrains and images, with Unity packages. Use when the user wants game art, a 3D model, a Unity-ready asset, a particle/VFX sprite sheet, a seamless texture or a skybox made for them.
+description: Generate game-ready assets with Zalmox (zalmox.io) - 3D models from text or images, retextured or animated models, VFX flipbooks, PBR textures, skyboxes, terrains, images and short videos, with Unity packages. Use when the user wants game art, a 3D model, a Unity-ready asset, a particle/VFX sprite sheet, a seamless texture, a skybox or a picture brought to life as a short clip made for them.
 ---
 
 # Zalmox
@@ -68,6 +68,9 @@ run `npx zalmox login` once.
      (layers, grid, fps) loose as a `sidecar` output, so there's no need to unpack the Unity package to read it.
    - A tiling material: `pbr-texture`. Sky: `skybox`; fixing a finished sky's seam or zenith: `skybox-repair`.
      Landscape: `terrain`. Concept art or icons: `image`.
+   - A short clip (3 or 5 s) from a picture or a description: `video`. With a picture (`image_path` / `--image`)
+     it stays the clip's exact first frame. Draft (Wan 2.2 TI2V-5B) also runs on the user's own GPU; Final (Wan 2.2
+     A14B, smoother, keeps characters' shapes and faces) runs only in the cloud, on a 48 GB GPU.
 4. **Wait and save.** Jobs take one to ten minutes. `wait_for_job` with a `download_dir` inside the user's project
    (e.g. `Assets/Zalmox/` in a Unity project) saves the files; if it says the job is still running, call it again.
    CLI: `--wait --out <dir>`. A queued cloud job whose stage reads "Starting a cloud GPU (about N min)" is waiting
@@ -239,6 +242,17 @@ run `npx zalmox login` once.
   seconds at which a second sound starts inside a one-shot (absent: none). A subject that implies an ending draws
   it whatever the words say ("a shell falling" ends in an impact): pick a take without onsets, cut before the first
   one, or describe only the sound itself ("a long whistling whine falling in pitch").
+- Video (`video`): with a picture, describe the motion and say what must not change ("the robot rises a little and
+  opens its arms, golden energy swirls around it, the nebula drifts; it keeps its exact shape and face"); without
+  one, describe the whole shot. `camera`: still (default: only the subject and scene move), push-in, orbit, pan.
+  `resolution` is the short side (480p or 720p); the clip keeps the picture's shape, up to 16:9. The model never
+  returns to the first frame by itself: `loop` on cuts it (in its last quarter) where it comes back closest and settles its last half
+  second onto the first frame, so the still can follow the clip (a card that plays on tap). Outputs: an MP4
+  (`video`, metadata: width, height, fps, seconds, seed, checks), a WebM (`video_webm`), the first frame
+  (`poster`), a thumbnail, `<name>_video.json` and a Unity package whose prefab is a quad with a VideoPlayer.
+  `checks` flags a clip that is black, frozen, cuts or flashes, or (still camera) ends far from its first frame; a
+  failing clip is animated once more with another seed when there's time. Final 720p takes about half an hour of a
+  48 GB cloud GPU per clip, and a first Final of the day waits several more minutes for that GPU to start.
 - Every job type that makes files takes a `name` (e.g. "storm wall" → `storm_wall_1a2b3c`): set one when making
   several assets of one kind, so their files and prefabs can be told apart.
 
